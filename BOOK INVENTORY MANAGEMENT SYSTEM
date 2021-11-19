@@ -1,0 +1,93 @@
+BEGIN TRANSACTION;
+
+/*
+    Book Store Inventory Management : 
+                                     This project creates a database for the management of a
+                                     book store. This database provides features : 
+                                     1. Adding a book.
+                                     2. Adding a review for a particular book.
+                                     3. Adding a user.
+                                     4. Updating stock of a particular book.
+                                     Use Cases : 
+                                     1. User purchase a book.
+                                     2. User search for a book based on keywords, author name, title etc.
+                                     3. User post review for a book.
+                                     4. User searches for review of a particular book.
+                                     5. Admin add a book in the database.
+                                     6. Admin removes unauthorized users.
+        Tables used : 
+            1. BOOK_DETAILS : 
+                parameters : 
+                            book_id => Unique identification of the book
+                            book_name => Name of the book
+                            author_id => Unique identification of the author
+                            book_description => Description of the book
+                            price => Price of the book
+                            in_stock => Quantity of this book available to be sold
+                            primary_keyword, secondary_keyword => Most used keywords for the book
+                            rating => Rating of the book on the scale of 5
+                            PRIMARY KEY => book_id will act as a primary key
+            2. AUTHOR : 
+                parameters : 
+                            author_id => Unique identification of author
+                            author_name => Name of the author
+                            address => Address of the author
+                            PRIMARY_KEY => author_id will act as a primary key
+            3. USER : 
+                parameters : 
+                            user_id => Unique identification of user
+                            user_name => Name of the user
+                            address => Address of the user
+                            PRIMARY_KEY => user_id will act as a primary key
+            4. BOOK_SOLD :
+                parameters :
+                            book_id => Foreign key which connects to BOOK_DETAILS table
+                            user_id => Foreign key which connects to USER table
+                            amount => Amount of books sold
+                            PRIMARY_KEY => Composite key (book_id, user_id) will act as a primary key
+            5. REVIEW : 
+                parameters : 
+                            user_id => Foreign key which connects to USER table
+                            book_id => Foreign key which connets to BOOK_DETAILS table
+                            review => Review on a book book_id by User user_id
+                            PRIMARY_KEY => Composite key (book_id, user_id) will act as a primary key
+                            
+*/
+
+/* Create a table called BOOK STORE INVENTORY MANAGEMENT */
+
+create table book_details (book_id int, book_name varchar(100), author_id int, book_description varchar(255), price float, in_stock int, primary_keyword varchar(10), secondary_keyword varchar(10), rating float, PRIMARY KEY (book_id));
+create table author(author_id int, author_name varchar(100), address varchar(100), PRIMARY KEY(author_id));
+create table user(user_id int, user_name varchar(100), address varchar(100), PRIMARY KEY(user_id));
+create table book_sold(book_id int, user_id int, amount int, PRIMARY KEY(book_id, user_id));
+create table review(user_id int, book_id int, review varchar(100), PRIMARY KEY(book_id, user_id));
+
+/* Create few records in this table */
+insert into book_details values (1, "Let us C", 1, "Learn C programming", 200.25, 3, "C", "software", 4.5);
+insert into book_details values (2, "Let us C++", 1, "Learn C++ programming", 230.25, 5, "C++", "C", 4.5);
+insert into book_details values (3, "Head first Java", 2, "Learn Java programming", 330, 10, "Java", "JVM", 3.5);
+insert into book_details values (4, "Java: The complete reference", 3, "7th edition, learn Java programming", 783, 4, "Java", "Javabeans", 4);
+insert into book_details values (5, "Thinking in Java", 4, "Java programming basics", 3000, 5, "Java", "JVM", 4.5);
+
+insert into author values (1, "Yashwant K.", "Austin, Texas");
+insert into author values (2, "Kathy Sierra", "San Diego, California");
+insert into author values (3, "Mc Graw Hill", "San francisco, California");
+insert into author values (4, "Bruce Eckel", "Palo Alto, California");
+
+insert into user values (1, "Sahil", "Atlanta, Georgia, USA");
+
+insert into review values (1, 1, "Brilliant book");
+COMMIT;
+
+BEGIN TRANSACTION;
+update book_details set in_stock = in_stock - 2 where book_id = 1;
+insert into book_sold values (1, 1, 2);
+COMMIT;
+
+
+/* Display all the records from the table */
+select * from book_details where primary_keyword like '%java%';
+select * from review where user_id = 1;
+select * from book_sold;
+
+
